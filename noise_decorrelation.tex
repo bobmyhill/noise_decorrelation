@@ -1,0 +1,212 @@
+%%%%%%%%%%%%%%%%%%%%%%% file template.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is a general template file for the LaTeX package SVJour3
+% for Springer journals.          Springer Heidelberg 2010/09/16
+%
+% Copy it to a new file with a new name and use it as the basis
+% for your article. Delete % signs as needed.
+%
+% This template includes a few options for different layouts and
+% content for various journals. Please consult a previous issue of
+% your journal as needed.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% First comes an example EPS file -- just ignore it and
+% proceed on the \documentclass line
+% your LaTeX will extract the file if required
+\begin{filecontents*}{example.eps}
+%!PS-Adobe-3.0 EPSF-3.0
+%%BoundingBox: 19 19 221 221
+%%CreationDate: Mon Sep 29 1997
+%%Creator: programmed by hand (JK)
+%%EndComments
+gsave
+newpath
+  20 20 moveto
+  20 220 lineto
+  220 220 lineto
+  220 20 lineto
+closepath
+2 setlinewidth
+gsave
+  .4 setgray fill
+grestore
+stroke
+grestore
+\end{filecontents*}
+%
+\RequirePackage{fix-cm}
+%
+%\documentclass{svjour3}                     % onecolumn (standard format)
+%\documentclass[smallcondensed]{svjour3}     % onecolumn (ditto)
+\documentclass[smallextended]{svjour3}       % onecolumn (second format)
+%\documentclass[twocolumn]{svjour3}          % twocolumn
+%
+\smartqed  % flush right qed marks, e.g. at end of proof
+%
+\usepackage{graphicx}
+%
+% \usepackage{mathptmx}      % use Times fonts if available on your TeX system
+%
+% insert here the call for the packages your document requires
+%\usepackage{latexsym}
+\usepackage{natbib}
+\usepackage[T1]{fontenc}
+% etc.
+%
+% please place your own definitions here and don't use \def but
+% \newcommand{}{}
+%
+% Insert the name of "your journal" with
+% \journalname{myjournal}
+%
+
+\usepackage{amsmath}    
+\usepackage{color}
+\begin{document}
+
+\title{Noise decorrelation}
+%\subtitle{Do you have a subtitle?\\ If so, write it here}
+
+\titlerunning{Noise decorrelation}        % if too long for running head
+
+\author{R. Myhill, N.A. Teanby, J. Wookey}
+
+%\authorrunning{Short form of author list} % if too long for running head
+
+\institute{R. Myhill \at
+  School of Earth Sciences, University of Bristol\\
+  \email{bob.myhill@bristol.ac.uk} \\}
+
+%\institute{ N.A. Teanby \at
+%  School of Earth Sciences, University of Bristol\\}
+  
+%\institute{ J. Wookey \at
+%  School of Earth Sciences, University of Bristol\\}
+  
+%\institute{N. Murdoch \at
+%  Institut Sup\'erieur de l'A\'eronautique et de l'Espace (ISAE-SUPAERO), Universit\'e de
+%  Toulouse, 31055 Toulouse Cedex 4, France}
+
+\date{Received: date / Accepted: date}
+% The correct dates will be entered by the editor
+
+
+\maketitle
+
+\begin{abstract}
+  
+
+\keywords{pressure \and atmospheric noise \and seismogram \and signal enhancement}
+\end{abstract}
+
+
+
+\section{Introduction}
+\label{sec:intro}
+
+Signals recorded on a single component of a seismometer can be decomposed into distinct contributions from seismicity (surface-wave, body-wave, and normal modes), tides, atmospheric pressure and other sources. If we are interested in analysing the seismic signal, it is a good strategy to attempt to remove the other components. The tidal contibution $x_{t} (t)$ can be removed easily by fitting a series of sinusoidal waves to the observed signal at the frequencies of the major tides. The other sources are more challenging to remove without information about their frequency and amplitude content, and how they affect the seismometer. Removing the contribution from atmospheric pressure is the subject of the current paper. The signal often dominates at low frequencies $<0.01 Hz$, even when the seismometer is deeply buried and the pressure variation in the immediate vicinity of the instrument is negligible.  
+
+\section{Method}
+We consider a time-series from a single component of a seismometer:
+\begin{equation}
+  x_{o}(t) = x_{s} (t) + x_{t} (t) + x_{p} (t) + x_{n} (t) 
+\end{equation}
+
+If we first detide the signal $x_{d} = x_{o} - x_{t}$ and group together the seismic signal and the part of the noise which is incoherent with the pressure signal $x_{s'} = x_{s} + x_{n}$, we obtain:
+\begin{equation}
+  x_{d}(t) = x_{s'} (t) + x_{p} (t)
+\end{equation}
+\noindent The Fourier transform $X_p (\omega)$ of $x_p (t)$ can be decomposed into components corresponding to the raw atmospheric pressure signal as recorded by a microbarometer ($\Delta P$), an unknown transfer function ($Z$) between atmospheric pressure and ground acceleration and the known response function corresponding to acceleration of the seismometer component ($H_a$) \citep{Zurn2007}:
+\begin{equation}
+  X_{p} (\omega) = H_a (\omega) Z (\omega) \Delta P (\omega)
+\end{equation}
+\noindent The pressure and seismic signals are assumed to be incoherent, so the Fourier transform of the detided seismic signal $x_d (t)$ can be expressed as 
+\begin{eqnarray}
+  X_{d} (\omega) = Z (\omega) X_{p'} (\omega) + X_{s'} (\omega) \\
+  X_{p'} (\omega)  = H_a (\omega) \Delta P (\omega) 
+\end{eqnarray}
+
+We seek to find an approximation of the transfer function $Z$ in order to remove the pressure-dependent part of the seismic signal. $Z$ can be written as follows:
+
+\begin{equation}
+  Z(\omega) = Z_r + iZ_i = \left| Z (\omega) \right| \exp \left( i\phi_Z \right) = \frac{S_{dp'}}{S_{p'p'}}
+  \label{eqn:transfer_function}
+\end{equation}
+\noindent where $S_{xy}$ is the cross-spectral density between $x$ and $y$. $Z_r$ is defined as the admittance, and $\left| Z \right|$ as the gain. The complex coherency $\Gamma$, is defined as:
+
+\begin{equation}
+  \Gamma (\omega) = \Gamma_r + i\Gamma_i = \left| \Gamma (\omega) \right| \exp \left( i\phi_{\Gamma} \right)  = \frac{ S_{dp'} }{\left( S_{dd}  S_{p'p'} \right)^{1 \over 2} }
+  \label{eqn:coherency}
+\end{equation}
+\noindent As the numerators of the RHS of Equations \ref{eqn:transfer_function} and \ref{eqn:coherency} are the same, and the denominators are real, the phase of the transfer function is equal to the phase of the coherency $\phi_{Z} = \phi_{\Gamma}$. The magnitude-squared coherence is then
+\begin{equation}
+  \gamma^2 (\omega) = \left| \Gamma (\omega) \right| ^2 = \frac{ \left| S_{dp'} \right|^2}{S_{dd}S_{p'p'}}
+  \label{eqn:coherence}
+\end{equation}
+
+
+
+For a sinusoidal plane wave travelling over a homogeneous substrate, $Z$ should be real-valued, and can therefore also be referred to as the gain (the modulus of the transfer function) or admittance (the real part of the transfer function).
+
+
+
+
+
+
+
+
+
+
+It is essential to use a sufficiently long time series to obtain reliable estimates of the coherence at low frequencies.
+
+\section{Appendix}
+Equation \ref{eqn:transfer_function} is equivalent to finding an approximation  $\widetilde{Z} (\omega)$ to the transfer function $Z (\omega)$ by constructing a Wiener filter $\Phi (\omega)$ which transforms the detided seismogram into an approximation of the ``pressure seismogram'':
+\begin{equation}
+  \widetilde{X}_{p}  (\omega) = \widetilde{Z} (\omega) X_{p'} (\omega) = \Phi (\omega) X_d  (\omega)
+\end{equation}
+\noindent $\widetilde{Z} (\omega)$ is sought to be as close as possible to the true transfer function $Z (\omega)$ in the least squares sense. In other words, we seek to minimize
+
+\begin{eqnarray}
+  \int_{-\infty}^{\infty} \left| \widetilde{Z} - Z \right| ^2 d\omega &=& \int_{-\infty}^{\infty} \left| \frac{ \left(X_{p} + X_{s'}\right) \Phi}{X_{p'}} - \frac{X_{p}}{X_{p'}} \right|^2 d\omega \\
+  &=& \int_{-\infty}^{\infty} \left| X_{p'} \right|^{-2} \left( \left| X_{p} \right|^2 \left| 1 - \Phi \right |^2 + \left| X_{s'} \right|^2 \left| \Phi \right|^2 \right) d\omega
+\end{eqnarray}
+\noindent Differentiating with respect to $\Phi (\omega)$ and setting the result to zero for all $\omega$, we obtain the result:
+\begin{equation}
+  \Phi (\omega)= \frac{\left| X_p (\omega) \right|^2}{ \left| X_p (\omega) \right|^2 + \left| X_{s'} (\omega) \right|^2 } = \frac{S_{pp} (\omega)}{S_{pp} (\omega) + S_{s's'} (\omega)}
+\end{equation}
+
+\noindent The pressure and seismic noise are assumed to be uncorrelated and $\widetilde{Z}$ is assumed to be real-valued, so we can make the following approximation:
+\begin{equation}
+  \Phi (\omega) \sim \frac{ S_{p'p'} (\omega) \widetilde{Z}^2 (\omega)}{S_{dd} (\omega)}
+  \label{eqn:approx_filter}
+\end{equation}
+\noindent We've already seen (Equations \ref{eqn:transfer_function} and \ref{eqn:coherence}) that
+\begin{eqnarray}
+  Z(\omega) &=& \frac{S_{dp'} (\omega)}{S_{p'p'} (\omega)} \\
+  \gamma^2 (\omega) &=& \frac{ \left| S_{dp'} (\omega) \right|^2}{S_{dd} (\omega)S_{p'p'} (\omega)}
+\end{eqnarray}
+\noindent so the implication for real-valued transfer functions $Z (\omega)$ is that the optimal Wiener filter can be approximated as the magnitude-squared coherence:
+\begin{equation}
+  \Phi (\omega) \sim \gamma^2 (\omega)
+  \label{eqn:optimal_filter}
+\end{equation}
+
+
+
+\begin{acknowledgements}
+  This research was funded by the UK Space Agency (UKSA). 
+  Seismic analysis was conducted using the Python toolbox ObsPy \citep{Beyreuther2010}.
+  The map figure was created using the Generic Mapping Tools \citep{Wessel2013}. Other figures were created with the python matplotlib module.
+\end{acknowledgements}
+
+\bibliographystyle{spbasic}
+\bibliography{references_decorrelation}
+
+
+
+
+\end{document}
+
+\grid
