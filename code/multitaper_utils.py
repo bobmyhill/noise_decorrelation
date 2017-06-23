@@ -159,4 +159,64 @@ def multitaper_cross_spectral_estimates(traces, delta, NW,
     
     return spectral_estimates
 
+def multitaper_cross_spectral_estimates_figure(fig, est, frequency_bounds=[-1., 1.e20], log_frequency=True, n_octave_y_scaling=None):
+    c_bnds = est['confidence_bounds']
+    
+    ax = [fig.add_subplot(2, 2, i) for i in range(1,5)]
+
+
+    freqs = est['frequencies']
+    
+    mask = [idx for (idx, f) in enumerate(freqs) if frequency_bounds[0] < f and f < frequency_bounds[1]]
+
+    if n_octave_y_scaling == None:
+        scale_mask = mask
+    else:
+        scale_mask = [idx for (idx, f) in enumerate(freqs) if frequency_bounds[0] < f and f < frequency_bounds[0]*np.power(2., n_octave_y_scaling)]
+    
+    for i in range(4):
+        ax[i].set_xlabel('Frequency (Hz)')
+        
+        if log_frequency:
+            ax[i].set_xscale("log", nonposx='clip')
+
+    # Plot magnitude-squared coherence
+    ax[0].fill_between(freqs[mask], c_bnds['magnitude_squared_coherence'][0][mask],
+                       c_bnds['magnitude_squared_coherence'][1][mask], alpha=0.3)
+    ax[0].plot(freqs[mask], est['magnitude_squared_coherence'][mask])
+
+    ax[0].set_ylim(0., 1.)
+            
+    # Plot admittance and gain
+    for (i, name) in [(1, 'admittance'), (2, 'gain')]:
+        ax[i].fill_between(freqs[mask], c_bnds[name][0][mask], c_bnds[name][1][mask], alpha=0.3)
+        ax[i].plot(freqs[mask], est[name][mask])
+        
+        lim = np.max(np.abs(np.array([c_bnds[name][0][scale_mask],
+                                      c_bnds[name][1][scale_mask]])))
+        lim *= np.mean(est[name][scale_mask])/np.abs(np.mean(est[name][scale_mask]))
+        if lim < 0.:
+            ax[i].set_ylim(1.1*lim, -0.2*lim)
+        else:
+            ax[i].set_ylim(-0.2*lim, 1.1*lim)
+
+    # Plot phase (potentially quite noisy
+    ax[3].fill_between(freqs[mask],
+                       np.zeros_like(freqs[mask]) -
+                       np.abs(c_bnds['phase'][0][mask] -
+                              c_bnds['phase'][1][mask]),
+                       np.zeros_like(freqs[mask]) +
+                       np.abs(c_bnds['phase'][0][mask] -
+                              c_bnds['phase'][1][mask]), alpha=0.3)
+    ax[3].plot(freqs[mask], np.zeros_like(freqs[mask]))
+    
+    ax[3].set_ylim(-180., 180.)
+
+
+    ax[0].set_ylabel('$\gamma^2$')
+    ax[1].set_ylabel('Admittance')
+    ax[2].set_ylabel('Gain')
+    ax[3].set_ylabel('Phase')
+
+    return fig
 
