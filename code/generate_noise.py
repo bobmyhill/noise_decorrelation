@@ -48,12 +48,13 @@ def noise_with_piecewise_linear_spectrum(frequencies, psddBs, n_samples=1024, de
 
     if scaling=='logperiod':
         for i in range(1,len(frequencies)):
-            logp_max, logp_min = log_periods[i-1:i+1]
+            logperiod_max, logperiod_min = log_periods[i-1:i+1]
             psddB_max, psddB_min = psddBs[i-1:i+1]
             
-            indices = np.where(np.logical_and(logp >= logp_min, logp <= logp_max))[0]
-            psddB_values = [(logp[idx] - logp_min) /
-                            (logp_max - logp_min) *
+            indices = np.where(np.logical_and(fft_logperiods >= logperiod_min,
+                                              fft_logperiods <= logperiod_max))[0]
+            psddB_values = [(fft_logperiods[idx] - logperiod_min) /
+                            (logperiod_max - logperiod_min) *
                             (psddB_max - psddB_min) +
                             psddB_min for idx in indices]
 
@@ -71,11 +72,13 @@ if __name__ == '__main__':
     # acceleration low noise model
     
     fig = plt.figure()
-    ax_psd = fig.add_subplot(1, 2, 1)
-    ax_timeseries = fig.add_subplot(1, 2, 2)
+    ax_timeseries = fig.add_subplot(2, 1, 1)
+    ax_psd = fig.add_subplot(2, 1, 2)
     
-    for fname in ['noise_models/Peterson_1993_NHNMacc_high_noise_model.dat',
-                  'noise_models/Peterson_1993_NLNMacc_low_noise_model.dat']:
+    for (name, fname) in [('High noise',
+                           'noise_models/Peterson_1993_NHNMacc_high_noise_model.dat'),
+                          ('Low noise',
+                           'noise_models/Peterson_1993_NLNMacc_low_noise_model.dat')]:
         
         periods, psddBs = np.loadtxt(fname, unpack=True)
         frequencies = 1./periods
@@ -96,9 +99,11 @@ if __name__ == '__main__':
             fft_frequencies, psd = periodogram(x=acc_noise, fs=1./delta)
             ax_psd.plot(np.log10(1./fft_frequencies[1:]), 10.*np.log10(psd[1:]), linestyle='--')
             
-            
-            
-            
-        ax_timeseries.plot(times[:500], acc_noise[:500])
-            
+        ax_timeseries.plot(times[:500], acc_noise[:500], label=name)
+
+    ax_timeseries.set_xlabel('Time (s)')
+    ax_timeseries.set_ylabel('Acceleration')
+    ax_timeseries.legend(loc='lower right')
+    ax_psd.set_xlabel('log$_{10}$(period) (s)')
+    ax_psd.set_ylabel('PSD')
     plt.show()
