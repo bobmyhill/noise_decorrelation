@@ -161,6 +161,70 @@ For a sinusoidal plane wave travelling over a homogeneous substrate, $Z$ should 
 
 It is essential to use a sufficiently long time series to obtain reliable estimates of the coherence at low frequencies.
 
+
+
+\section{Theory}
+\cite{Comer1983} considered a homogeneous, isotropic elastic plate with a load applied to its upper surface floating on a fluid in the presence of a uniform gravitational field. Let $\lambda$ and $\mu$ be the Lam\'{e} constants of the plate, $H$ the thickness of the plate, $\rho$ the density of the fluid and $g$ the acceleration of gravity. We will use a Cartesian coordinate system with the origin at the top surface of the (unloaded) plate, the $x$- and $y$-axes horizontal and the $z$-axis positive downward. Also, by $\sigma_{ij}$ we denote the elastic stress tensor, by $i$, a partial derivative with respect to the Cartesian coordinate $x_i$, and by $\delta_{ij}$, the Kronecker delta (which is 1 if $i = j$, 0 if $i \neq j$), and we apply the summation convention to repeated indices.
+
+The condition for static equilibrium within the plate is
+\begin{equation}
+  \sigma_{ij,j} = 0
+\end{equation}
+
+We are neglecting body forces due to the effect of the gravitational field on the mass of the plate. This is equivalent to assuming that the unloaded plate is in a state of hydrostatic stress. Assuming the deformation of the plate under the load is small enough for infinitesimal strains to be used, the relation between the stress tensor $\sigma_{ij}$ and the displacement vector $u_i$ is
+\begin{equation}
+  \sigma_{ij} = \lambda u_{k,k} \delta_{ij} + \mu(u_{i,j} + u_{j,i})
+\end{equation}
+
+In the quasi-static approximation, a one-dimensional harmonic load $q \cos (kx - \omega t)$ exerted by a pressure wave with velocity $c = \omega/k$ is represented by the following boundary conditions:
+\begin{eqnarray}
+\sigma_{zz} (z=0) &=& -q \cos (kx - \omega t) \\
+\sigma_{zx} (z=0) &=& 0 \\
+\sigma_{zz} (z=H) &=& -\rho g u_z \\
+\sigma_{zx} (z=H) &=& 0
+\end{eqnarray}
+
+%(Note also that $\sigma_{xy} = \sigma_{zy} = 0$).
+\noindent The $x$ and $z$ components of the displacement field ($u_y = 0$) are as follows:
+
+\begin{equation}
+  \begin{split}
+    u_x(x, z) = \frac{q \sin \left(kx - \omega t \right)}{4 \mu \left(\lambda + \mu\right) k}
+    \Biggl(& \left( \lambda + 2 \mu \right) \Bigl( \left(A - 2C\right) e^{-kz} \\
+    & + \left( B + 2D \right) e^{kz} + Ckz e^{-kz} + Dkz e^{kz}  \Bigr) \\
+    & + \lambda \Bigl( A e^{-kz} + B e^{kz} \\
+    & + Ckz e^{-kz} + Dkz e^{kz} \Bigr) \Biggr)
+  \end{split}
+\end{equation}
+
+\begin{equation}
+  \begin{split}
+    u_z(x, z) = \frac{q \cos \left(kx - \omega t \right)}{4 \mu \left(\lambda + \mu\right) k}
+    \Biggl(& \left( \lambda + 2 \mu \right) \Bigl( \left(A + C\right) e^{-kz} \\
+    & + \left( -B + D \right) e^{kz} + Ckz e^{-kz} -Dkz e^{kz} \Bigr) \\
+    & + \lambda \Bigl( \left( A - C\right) e^{-kz} - \left( B+D \right) e^{kz} \\
+    & + Ckz e^{-kz} - Dkz e^{kz} \Bigr) \Biggr)
+  \end{split}
+\end{equation}
+
+
+\begin{eqnarray}
+  A &=& 1 - B \\
+  B &=& \frac{1}{2} \left( 1 - C - d \right) \\
+  C &=& \frac{1}{\delta} \left( -\frac{1}{2} - \xi + kH + \left( \frac{1}{2} + \xi \right) \exp \left(2kH\right) \right) \\
+  D &=& \frac{1}{\delta} \left( \frac{1}{2} - \xi + kH + \left( -\frac{1}{2} + \xi \right) \exp \left(-2kH\right) \right) \\
+\end{eqnarray}
+\begin{equation}
+  \begin{split}
+    \delta = \left( \frac{1}{2} - \xi \right) \exp \left(-2kH\right) + \left(\frac{1}{2} + \xi\right) \exp(2kH) \\
+    - 1 + 4 \xi kH - 2\left(kH\right)^2 
+  \end{split}
+\end{equation}
+\begin{equation}
+  \xi = \frac{\rho g \left( \lambda + 2 \mu \right)}{4 \mu \left( \lambda + \mu \right) k}
+\end{equation}
+
+
 \section{Appendix}
 Equation \ref{eqn:transfer_function} is equivalent to finding an approximation  $\widetilde{Z} (\omega)$ to the transfer function $Z (\omega)$ by constructing a Wiener filter $\Phi (\omega)$ which transforms the detided seismogram into an approximation of the ``pressure seismogram'':
 \begin{equation}
