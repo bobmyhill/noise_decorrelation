@@ -101,3 +101,6 @@ sympy-plots-for-*.tex/
 # python
 *.tmp
 *.pyc
+
+# Output pdfs
+code/output_figures/*.pdf
